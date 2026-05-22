@@ -64,7 +64,10 @@ app.post('/api/diagnostico', async (req, res) => {
         });
     }
 });
-
+// Ruta de prueba de vida (Healthcheck) para que Coolify vea que el circuito está cerrado
+app.get('/', (req, res) => {
+    res.status(200).send("Servidor PRO operando en perfecta condición.");
+});
 // EL FILAMENTO CONTINUO: Este bloque mantiene el servidor encendido las 24/7
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
