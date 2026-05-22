@@ -1,12 +1,21 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
+
+// Configuramos las rutas internas para que Express encuentre el index.html
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Permitir que el servidor entienda datos en formato JSON
 app.use(express.json());
 
-// Bypass de CORS para que su interfaz estática se comunique sin bloqueos
+// EL PUENTE NUEVO: Le dice a Express que sirva el index.html y los archivos de la raíz
+app.use(express.static(__dirname));
+
+// Bypass de CORS para evitar bloqueos del navegador
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,23 +28,25 @@ app.use((req, res, next) => {
     next();
 });
 
-// Cambiamos el handler de Vercel por una ruta POST estándar de Express
+// Ruta principal: Ahora en lugar de solo texto, envía su pantalla index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Ruta POST para procesar el diagnóstico con Gemini
 app.post('/api/diagnostico', async (req, res) => {
     try {
         const { marca, modelo, sintoma, descartes } = req.body;
 
-        // Validamos que los componentes requeridos hayan llegado bien
         if (!marca || !modelo || !sintoma) {
             return res.status(200).json({ text: "⚠️ ERROR EN RECEPCIÓN: Faltan datos técnicos en el reporte enviado desde el buscador." });
         }
 
-        // Base de conocimiento integrada de forma interna
         const tipsContenido = "Aplica el Método OC. Usa conocimientos avanzados en electrónica de TVs modernos. Analiza voltajes en la fuente, señales LVDS/Mini-LVDS, voltajes de compuerta T-CON (VGH, VGL, VCOM) y fallas comunes en COF/TAB.";
 
-        // Estructura del Prompt para el motor de la IA
         const prompt = `Actúa como un expertisimo instructor de reparación de televisores modernos. 
         Basándote en estas directrices técnicas: ${tipsContenido}
-        Analiza detalladamente la siguiente falla en banco y provee un diagnóstico estructurado bajo el Método OC:
+        Analiza detalladamente la siguiente falla en banco y provee un diagnóstico estruturado bajo el Método OC:
         MARCA: ${marca} | MODELO: ${modelo} | SÍNTOMA: ${sintoma} | PRUEBAS REALIZADAS: ${descartes || 'Ninguna registrado'}`;
 
         const apiKey = process.env.GEMINI_API_KEY;
@@ -45,16 +56,13 @@ app.post('/api/diagnostico', async (req, res) => {
             });
         }
 
-        // Inicializamos el cliente de Inteligencia Artificial
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        // Envío de señal a los servidores de Google
         const result = await model.generateContent(prompt);
         const responseIA = await result.response;
         const textoFinal = responseIA.text();
 
-        // Retornamos la respuesta limpia en JSON
         return res.status(200).json({ text: textoFinal });
 
     } catch (error) {
@@ -64,11 +72,7 @@ app.post('/api/diagnostico', async (req, res) => {
         });
     }
 });
-// Ruta de prueba de vida (Healthcheck) para que Coolify vea que el circuito está cerrado
-app.get('/', (req, res) => {
-    res.status(200).send("Servidor PRO operando en perfecta condición.");
-});
-// EL FILAMENTO CONTINUO: Este bloque mantiene el servidor encendido las 24/7
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor PRO operando con éxito y escuchando en puerto ${PORT}`);
