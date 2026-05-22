@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estación de Diagnóstico PRO - Método OC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Paleta de Colores PRO: Azul Eléctrico (#38bdf8), Oro/Ámbar (#fbbf24) y Fondo Oscuro Premium */
+        :root {
+            --azul-pro: #38bdf8;
+            --oro-premium: #fbbf24;
+            --fondo-oscuro: #0f172a;
+            --tarjeta-bg: #1e293b;
+            --borde-color: #334155;
+            --texto-secundario: #94a3b8;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--fondo-oscuro); 
+            color: white; 
+            padding: 20px; 
+            user-select: none; 
+            -webkit-user-select: none; 
+        }
+        .container { 
+            max-width: 700px; 
+            margin: auto; 
+            background: var(--tarjeta-bg); 
+            padding: 25px; 
+            border-radius: 15px; 
+            border: 1px solid var(--borde-color); 
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.1); 
+        }
+        .header-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid var(--borde-color); 
+            padding-bottom: 15px; 
+        }
+        .nav-links { display: flex; gap: 15px; }
+        .btn-nav { 
+            color: var(--azul-pro); 
+            text-decoration: none; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            cursor: pointer; 
+            background: none; 
+            border: none; 
+            font-size: 1em; 
+            padding: 0; 
+        }
+        .btn-nav:hover { color: #7dd3fc; }
+        .logo-small { max-width: 100px; height: auto; filter: drop-shadow(0 0 5px rgba(56,189,248,0.3)); }
+        
+        h2 { 
+            text-align: center; 
+            color: var(--oro-premium); 
+            text-transform: uppercase; 
+            margin-top: 5px; 
+            letter-spacing: 1.5px; 
+            text-shadow: 0 0 10px rgba(251,191,36,0.2);
+        }
+        label { display: block; margin-top: 15px; color: var(--texto-secundario); font-weight: bold; font-size: 0.9em; }
+        input, textarea { width: 100%; padding: 13px; margin-top: 5px; border-radius: 8px; border: 1px solid var(--borde-color); background: var(--fondo-oscuro); color: white; box-sizing: border-box; font-size: 1em; }
+        input:focus, textarea:focus { border-color: var(--oro-premium); outline: none; box-shadow: 0 0 8px rgba(251,191,36,0.2); }
+        textarea { height: 100px; resize: none; }
+        
+        button.btn-principal { 
+            width: 100%; 
+            padding: 16px; 
+            margin-top: 25px; 
+            background: linear-gradient(135deg, #d97706, #b45309); 
+            border: none; 
+            color: white; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 1.1em; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(180, 83, 9, 0.3);
+        }
+        button.btn-principal:hover { background: linear-gradient(135deg, #b45309, #92400e); transform: translateY(-1px); }
+        
+        #loading { display: none; text-align: center; margin-top: 25px; color: var(--azul-pro); font-weight: bold; }
+        #result { display: none; margin-top: 25px; padding: 25px; background: var(--fondo-oscuro); border-left: 6px solid var(--oro-premium); border-radius: 8px; line-height: 1.7; white-space: pre-wrap; color: #f0f0f0; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        
+        /* Contenedor de Botones Dinámicos para Planos y Recursos */
+        .soporte-container { margin-top: 25px; border-top: 2px solid var(--borde-color); padding-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .btn-recurso { display: inline-flex; align-items: center; gap: 10px; color: white !important; padding: 14px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .btn-video { background: #e11d48; } 
+        .btn-imagen { background: #16a34a; } 
+        .btn-manual { background: #2563eb; } 
+        .btn-recurso:hover { transform: translateY(-3px); filter: brightness(1.2); box-shadow: 0 6px 12px rgba(0,0,0,0.4); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <div class="nav-links">
+            <a href="index.html" class="btn-nav"><i class="fa-solid fa-house"></i> Inicio</a>
+            <button onclick="cerrarSesion()" class="btn-nav"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+        </div>
+        <img src="logo-oc.png" alt="Método OC" class="logo-small" onerror="this.style.display='none'">
+    </div>
+    
+    <h2>Estación de Diagnóstico Avanzado (PRO)</h2>
+    
+    <label><i class="fa-solid fa-tag"></i> Marca del Televisor</label>
+    <input type="text" id="marca" placeholder="Ej: Sony, Samsung, LG...">
+    
+    <label><i class="fa-solid fa-microchip"></i> Modelo Técnico</label>
+    <input type="text" id="modelo" placeholder="Ej: KDL-40EX..., UN50TU... ">
+    
+    <label><i class="fa-solid fa-tv"></i> Síntoma de la Falla en Banco</label>
+    <input type="text" id="sintoma" placeholder="Ej: Parpadea el LED 5 veces, líneas verticales, sin backlight...">
+    
+    <label><i class="fa-solid fa-screwdriver-wrench"></i> Mediciones y Descartes Realizados</label>
+    <textarea id="descartes" placeholder="Ej: Voltajes de fuente estables, señal LVDS presente, bypass de señal VON no realizado..."></textarea>
+    
+    <button onclick="consultarIAPro()" class="btn-principal">
+        <i class="fa-solid fa-brain"></i> Solicitar Diagnóstico con IA Experta
+    </button>
+
+    <div id="loading">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>
+        <span id="loading-text">Verificando credenciales de acceso PRO...</span>
+    </div>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    // ⚙️ CALIBRACIÓN: Pegue aquí exactamente la misma URL de Google Apps Script que termina en /exec
+    const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbxl_Tq6EUnatxLI7SbGUYp5F5Ug2td2s-3QfDAtDC723DWNQgL6VGZL-WBWOocrSd4Z/exec";
+
+    // 🗃️ BANCO DE ENLACES EXTERNOS MÉTODOS OC (Mantenga aquí sus códigos de planos y manuales)
+    const BANCO_LINKS = {
+        "VIDEO_TEST_PRO": "https://tu-link-exclusivo-pro.com",
+        "PDF_SONY_BYPASS": "https://tu-link-al-plano-sony.com"
+    };
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    
+    function cerrarSesion() {
+        if(confirm("¿Cerrar sesión de Alumno PRO?")) {
+            localStorage.removeItem('userEmail'); // Sincronizado con index.html panorámico
+            location.href = 'index.html';
+        }
+    }
+
+    async function consultarIAPro() {
+        // Leemos el correo guardado por el index.html
+        let emailAlumno = localStorage.getItem('userEmail');
+        
+        if (!emailAlumno) {
+            emailAlumno = prompt("¡Qué tal colega PRO! Ingresa tu correo de acceso autorizado:");
+            if (emailAlumno) {
+                emailAlumno = emailAlumno.trim().toLowerCase();
+                localStorage.setItem('userEmail', emailAlumno);
+            } else {
+                return;
+            }
+        }
+
+        const marca = document.getElementById('marca').value.trim();
+        const modelo = document.getElementById('modelo').value.trim();
+        const sintoma = document.getElementById('sintoma').value.trim();
+        const descartes = document.getElementById('descartes').value.trim();
+        const resultDiv = document.getElementById('result');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loading-text');
+
+        if (!marca || !modelo || !sintoma || !descartes) {
+            alert("Por favor, rellene todos los campos del reporte de banco antes de consultar a la IA.");
+            return;
+        }
+
+        resultDiv.style.display = 'none';
+        loading.style.display = 'block';
+        loadingText.innerText = "Verificando credenciales de acceso PRO...";
+
+        try {
+            // 📡 ETAPA 1: Validación directa de Pestaña "alumnos-pro" en Google Sheets (Evita error '<')
+            const urlConsulta = `${URL_SCRIPT_GOOGLE}?email=${encodeURIComponent(emailAlumno)}&version=pro`;
+            
+            const resValida = await fetch(urlConsulta);
+            const dataValida = await resValida.json();
+            
+            if (dataValida && dataValida.autorizado === true) {
+                
+                // 🚀 ETAPA 2: El alumno existe, ahora activamos el backend en Vercel para despertar a Gemini
+                loadingText.innerText = "Analizando falla con Inteligencia Artificial Gemini...";
+                
+                const resIA = await fetch('/api/diagnostico', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ marca, modelo, sintoma, descartes, email: emailAlumno })
+                });
+                
+                if (!resIA.ok) {
+                    throw new Error("Falla en el servidor de Inteligencia Artificial.");
+                }
+                
+                const dataIA = await resIA.json();
+                let textoIA = dataIA.text; // Recibe la respuesta formateada de la IA
+                
+                // 🛠️ ETAPA 3: Escaneo e inyección dinámica de botones para planos/videos
+                let htmlBotones = '<div class="soporte-container">';
+                let hayRecurso = false;
+
+                for (const codigo in BANCO_LINKS) {
+                    if (textoIA.toUpperCase().indexOf(codigo.toUpperCase()) !== -1) {
+                        hayRecurso = true;
+                        let claseCss = "btn-video"; 
+                        let icono = "fa-play-circle";
+                        let textoBoton = "VER VIDEO EXPLICATIVO";
+
+                        if (codigo.startsWith("IMG_")) {
+                            claseCss = "btn-imagen"; icono = "fa-image"; textoBoton = "VER DIAGRAMA";
+                        } else if (codigo.startsWith("PDF_")) {
+                            claseCss = "btn-manual"; icono = "fa-file-pdf"; textoBoton = "DESCARGAR PLANO/MANUAL";
+                        }
+
+                        htmlBotones += `<a href="${BANCO_LINKS[codigo]}" target="_blank" class="btn-recurso ${claseCss}"><i class="fa-solid ${icono}"></i> ${textoBoton}</a>`;
+                        textoIA = textoIA.replace(new RegExp(codigo, 'gi'), ""); // Limpia el código del texto
+                    }
+                }
+
+                // Limpieza de etiquetas de control sobrantes
+                textoIA = textoIA.replace(/(RECURSO:|VIDEO:|IMAGEN:|PDF:|MANUAL:|LINK:|CÓDIGO:)/gi, "");
+                
+                // Renderizado final
+                resultDiv.innerHTML = textoIA.trim() + (hayRecurso ? htmlBotones + '</div>' : '');
+                loading.style.display = 'none';
+                resultDiv.style.display = 'block';
+                
+            } else {
+                loading.style.display = 'none';
+                alert("❌ Acceso Denegado: Su correo no se encuentra registrado en la lista de Alumnos PRO. Verifique sus datos.");
+            }
+
+        } catch (error) {
+            loading.style.display = 'none';
+            alert("🚨 Error de Sistema: No se pudo completar el diagnóstico. Verifique que la URL de la línea 68 sea la correcta y que el servidor de Gemini esté en línea.");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+TEMA: VGH (Voltaje de Gate High)
+DEFINICIÓN: ¿Qué es el voltaje VGH y para qué se necesita?
+El VGH (Gate High Voltage), también conocido como VON, es un voltaje positivo alto que típicamente oscila entre los +20V y +35V que es generado en la T-CON. Su función crítica es activar (encender) los transistores TFT (Thin Film Transistor) dentro del panel LCD. Al recibir este voltaje, las "compuertas" de los píxeles se abren para permitir que la información de color y brillo fluya hacia el cristal líquido.
+VIDEO: https://player.mediadelivery.net/play/651071/ac3f5ead-f90e-4716-87bb-57f010f37f7a
+IMAGEN: https://drive.google.com/file/d/1N4-CuKdu_vYH-iTykxuIkVlx1cIct844/view?usp=sharing
+PDF: https://drive.google.com/file/d/1xCpopbOwefqLkKBd1X-FBi4Tpf_zlsFd/view?usp=sharing
+==================================================
+TEMA: El VGL (Gate Low Voltage), también conocido como VOFF o VGOFF, es uno de los voltajes fundamentales generados por el conversor DC-DC en la tarjeta T-CON para el correcto funcionamiento del panel LCD.
+DEFINICIÓN: Es el voltaje de apagado de los píxeles...
+PDF: https://drive.google.com/file/d/1OmMqgGHvP5qVyeKr6Umjr7xf-aZ3PZUh/view?usp=sharing
+==================================================
+TEMA: SEÑAL LVDS
+DEFINICIÓN: Las señales LVDS son un estándar de transmisión de datos de alta velocidad que se utilizan para enviar la información de video y sincronismo en pares trenzados desde la tarjeta principal (Mainboard) hacia la tarjeta T-CON
+.
+Su diseño diferencial permite transmitir grandes volúmenes de datos con un consumo de energía muy bajo y una alta resistencia al ruido electromagnético.
+VIDEO: https://player.mediadelivery.net/play/651071/6897cc9d-8616-4e8f-bf36-233f7fad4960
+IMAGEN: https://drive.google.com/file/d/1BB3MCsBgGiORg6MNCj5EaPXVZtXpGEfq/view?usp=sharing
+PDF: https://drive.google.com/file/d/1sL8EbeRM-y3WDBI9ORkYPKYLEZQSqxGU/view?usp=sharing
+==================================================
+TEMA: El Voltaje VCOM.Si el voltaje VCOM (Common Voltage) está ausente, es anormal o se desvía de su valor de diseño, la pantalla experimentará degradaciones severas en la calidad de la imagen, ya que este es el voltaje de referencia común necesario para estabilizar los cristales líquidos.
+VIDEO: https://player.mediadelivery.net/play/651071/db199625-325a-4321-9b25-546702bf1012
+IMAGEN: https://drive.google.com/file/d/1iRkXQpiuI0NygkPpPORwq4zgHiw2LKsf/view?usp=sharing
+PDF: https://drive.google.com/file/d/1sL8EbeRM-y3WDBI9ORkYPKYLEZQSqxGU/view?usp=sharing
