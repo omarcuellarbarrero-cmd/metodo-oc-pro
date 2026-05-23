@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador de Diagnósticos PRO - Método OC</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <style>
         :root {
             --primary-color: #2563eb;
@@ -91,7 +93,7 @@
             display: none;
         }
 
-        /* --- ESTILOS AUTOMÁTICOS PARA LOS BOTONES MULTIMEDIA --- */
+        /* --- ESTILOS VISUALES PARA LOS BOTONES MULTIMEDIA --- */
         .resultado-box a {
             display: inline-flex;
             align-items: center;
@@ -111,21 +113,19 @@
             opacity: 0.9;
         }
 
-        /* Si el enlace contiene la palabra video, bunny o mp4, se vuelve un botón ROJO */
+        /* Filtro de color para los botones */
         .resultado-box a[href*="video"], 
         .resultado-box a[href*="bunny"], 
         .resultado-box a[href*="mp4"] {
             background-color: var(--accent-video);
         }
 
-        /* Si el enlace contiene la palabra pdf, manual o diagrama, se vuelve un botón VERDE */
         .resultado-box a[href*="pdf"], 
         .resultado-box a[href*="manual"], 
         .resultado-box a[href*="diagrama"] {
             background-color: var(--accent-pdf);
         }
 
-        /* Botón genérico azul si es un enlace cualquiera */
         .resultado-box a:not([href*="video"]):not([href*="bunny"]):not([href*="mp4"]):not([href*="pdf"]):not([href*="manual"]):not([href*="diagrama"]) {
             background-color: var(--primary-color);
         }
@@ -158,12 +158,12 @@
 
     <div class="form-group">
         <label for="sintoma">Síntoma observado en banco:</label>
-        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea el LED de standby 6 veces..."></textarea>
+        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea..."></textarea>
     </div>
 
     <div class="form-group">
         <label for="descartes">Pruebas o descartes realizados (Opcional):</label>
-        <textarea id="descartes" rows="2" placeholder="Ej: Voltajes de fuente estables, desconecté flex de pantalla..."></textarea>
+        <textarea id="descartes" rows="2" placeholder="Ej: Voltajes estables..."></textarea>
     </div>
 
     <button class="btn-search" onclick="lanzarDiagnostico()">Consultar Motor de IA</button>
@@ -206,14 +206,11 @@
 
             const datos = await respuesta.json();
             
-            // Renderizamos el texto de la IA usando Marked.js para interpretar negritas y listas
             resultadoTexto.innerHTML = marked.parse(datos.text);
             
-            // Le añadimos un texto personalizado a los botones para que se vean estéticos
             const enlaces = resultadoTexto.querySelectorAll('a');
             enlaces.forEach(enlace => {
                 const url = enlace.href.toLowerCase();
-                // Abrir en pestaña nueva siempre
                 enlace.target = "_blank"; 
                 
                 if (url.includes('video') || url.includes('bunny') || url.includes('mp4')) {
