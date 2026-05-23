@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'buscador.html'));
 });
 
 app.post('/api/diagnostico', async (req, res) => {
