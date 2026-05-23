@@ -97,7 +97,6 @@ app.post('/api/diagnostico', async (req, res) => {
     }
 });
 
-// FILAMENTO DE ENCENDIDO: Mantiene el servidor operando las 24/7
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor PRO operando con éxito y escuchando en puerto ${PORT}`);
