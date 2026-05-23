@@ -291,9 +291,7 @@ CAUSA: Falta VGH en COF lateral por pistas internas rotas.
 SOLUCION: Jumper desde T-CON a COF. 
 [VIDEO]: https://player.mediadelivery.net/play/651071/4dddd57a-e922-4a3c-a433-54349eca2d34
 [PDF]: https://www.mediafire.com/file/4g23cvomzdh62he/KDL-32M3000+Chasis+MA1.pdf/file
-
-
-  =================================
+=================================
 
  
 
