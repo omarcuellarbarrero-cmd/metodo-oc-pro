@@ -83,12 +83,41 @@
 
 <script>
     async function lanzarDiagnostico() {
-    const btn = document.querySelector('.btn-search');
+    // Captura exacta del valor del selector
+    const selectElement = document.getElementById('tipoEquipo');
+    const tipoEquipo = selectElement.options[selectElement.selectedIndex].text; 
     
-    // Cambiamos el texto y activamos la animación
+    // Captura de los inputs (asegurándonos de obtener el .value)
+    const marca = document.getElementById('marca').value;
+    const modelo = document.getElementById('modelo').value;
+    const sintoma = document.getElementById('sintoma').value;
+
+    console.log("Enviando:", { tipoEquipo, marca, modelo, sintoma });
+
+    const btn = document.querySelector('.btn-search');
     btn.classList.add('btn-loading');
     btn.innerText = "⚡ Sintonizando Frecuencia...";
     btn.disabled = true;
+
+    try {
+        const respuesta = await fetch('/api/diagnostico', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma })
+        });
+
+        const datos = await respuesta.json();
+        
+        document.getElementById('resultadoTexto').innerHTML = marked.parse(datos.text);
+        document.getElementById('resultadoBox').style.display = 'block';
+    } catch (error) {
+        alert("Error de conexión con el motor de IA");
+    } finally {
+        btn.classList.remove('btn-loading');
+        btn.innerText = "Consultar Motor de IA";
+        btn.disabled = false;
+    }
+}
 
     // ... (el resto de su código de fetch, marca, modelo, etc.) ...
 
