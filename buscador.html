@@ -9,12 +9,13 @@
     
     <style>
         :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --accent-video: #ef4444; /* Rojo Bunny */
-            --accent-pdf: #10b981;   /* Verde Diagramas */
+            --primary-color: #f97316; /* ¡NARANJA MÉTODO OC! */
+            --primary-hover: #ea580c; /* Naranja dinámico al pasar el mouse */
+            --bg-color: #f1f5f9;      /* Fondo gris claro de banco */
+            --card-bg: #ffffff;       /* Chasis Blanco Limpio */
+            --text-color: #1e293b;    /* Texto oscuro de alta legibilidad */
+            --accent-video: #ef4444;  /* Rojo Vivo para transmisión de Video (Bunny) */
+            --accent-pdf: #10b981;    /* Verde Industrial para Manuales y PDF */
         }
 
         body {
@@ -22,16 +23,55 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
+        /* BARRA SUPERIOR DE NAVEGACIÓN COMPLETA */
+        .navbar {
+            background-color: #0f172a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-decoration: none;
+        }
+
+        .navbar-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .navbar-nav a:hover {
+            color: #ffffff;
+        }
+
+        .navbar-nav a.btn-logout {
+            color: #f87171;
+        }
+        
+        .navbar-nav a.btn-logout:hover {
+            color: #f87171;
+            text-decoration: underline;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 40px auto;
             background: var(--card-bg);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
@@ -46,85 +86,112 @@
             margin-top: 0;
             font-weight: 400;
             font-size: 1.1rem;
+            margin-bottom: 25px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 600;
+            color: #334155;
         }
 
         input, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
+            transition: border-color 0.2s;
         }
 
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* BOTÓN NARANJA DE CONSULTA */
         button.btn-search {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2);
         }
 
         button.btn-search:hover {
-            background-color: #1d4ed8;
+            background-color: var(--primary-hover);
         }
 
+        button.btn-search:active {
+            transform: scale(0.99);
+        }
+
+        button.btn-search:disabled {
+            background-color: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* CAJA DE RESULTADOS */
         .resultado-box {
-            margin-top: 25px;
-            padding: 20px;
-            border-left: 5px solid var(--primary-color);
-            background-color: #f1f5f9;
-            border-radius: 4px;
+            margin-top: 30px;
+            padding: 25px;
+            border-left: 6px solid var(--primary-color);
+            background-color: #f8fafc;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
             display: none;
         }
 
-        /* --- ESTILOS VISUALES PARA LOS BOTONES MULTIMEDIA --- */
+        /* BOTONES MULTIMEDIA INTERACTIVOS (ROJO Y VERDE) */
         .resultado-box a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 20px;
-            margin: 8px 10px 8px 0;
+            padding: 12px 24px;
+            margin: 10px 12px 10px 0;
             font-weight: bold;
             text-decoration: none;
             color: white !important;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
             transition: transform 0.2s, opacity 0.2s;
         }
 
         .resultado-box a:hover {
             transform: translateY(-2px);
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
-        /* Si el enlace es de Bunny/Video, se vuelve ROJO */
+        /* Filtros por coincidencia de texto en la URL */
         .resultado-box a[href*="video"], 
         .resultado-box a[href*="bunny"], 
-        .resultado-box a[href*="mp4"] {
+        .resultado-box a[href*="mp4"],
+        .resultado-box a[href*="player.mediadelivery.net"] {
             background-color: var(--accent-video);
         }
 
-        /* Si el enlace es de PDF/Manual, se vuelve VERDE */
         .resultado-box a[href*="pdf"], 
         .resultado-box a[href*="manual"], 
         .resultado-box a[href*="diagrama"] {
             background-color: var(--accent-pdf);
+        }
+
+        /* Color por defecto si es otro tipo de link */
+        .resultado-box a:not([href*="video"]):not([href*="bunny"]):not([href*="mp4"]):not([href*="player.mediadelivery.net"]):not([href*="pdf"]):not([href*="manual"]):not([href*="diagrama"]) {
+            background-color: #64748b;
         }
 
         .loading {
@@ -132,16 +199,26 @@
             display: none;
             font-weight: bold;
             color: var(--primary-color);
-            margin-top: 15px;
+            margin-top: 20px;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
+<nav class="navbar">
+    <a class="navbar-brand" href="#">Método OC PRO</a>
+    <div class="navbar-nav">
+        <a href="/">Inicio</a>
+        <a href="#">Herramientas</a>
+        <a href="#" class="btn-logout">Cerrar Sesión</a>
+    </div>
+</nav>
+
 <div class="container">
     <h1>Buscador Avanzado PRO</h1>
-    <h3>Ecosistema de Diagnóstico Especializado - Método OC</h3>
-    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 20px;">
+    <h3>Ecosistema de Diagnóstico Especializado - Omar Cuéllar</h3>
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 25px;">
 
     <div class="form-group">
         <label for="marca">Marca del TV:</label>
@@ -155,20 +232,20 @@
 
     <div class="form-group">
         <label for="sintoma">Síntoma observado en banco:</label>
-        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea el LED 6 veces..."></textarea>
+        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea el LED de stand-by..."></textarea>
     </div>
 
     <div class="form-group">
         <label for="descartes">Pruebas o descartes realizados (Opcional):</label>
-        <textarea id="descartes" rows="2" placeholder="Ej: Voltajes estables..."></textarea>
+        <textarea id="descartes" rows="2" placeholder="Ej: Voltajes correctos en fuente, subfuentes de la Main estables..."></textarea>
     </div>
 
     <button class="btn-search" onclick="lanzarDiagnostico()">Consultar Motor de IA</button>
 
-    <div id="loading" class="loading">⚡ Procesando mediciones y analizando con Método OC... Espere un momento.</div>
+    <div id="loading" class="loading">⚡ Analizando fallas en banco y parámetros del Método OC... Espere.</div>
 
     <div id="resultadoBox" class="resultado-box">
-        <h4 style="margin-top:0; color:#0f172a;">📋 Diagnóstico Estructurado:</h4>
+        <h4 style="margin-top:0; color:#0f172a; font-size:1.2rem;">📋 Diagnóstico Estructurado:</h4>
         <div id="resultadoTexto"></div>
     </div>
 </div>
@@ -203,16 +280,16 @@
 
             const datos = await respuesta.json();
             
-            // Renderizamos el texto usando Marked.js
+            // Convertimos Markdown de la IA a HTML estructurado
             resultadoTexto.innerHTML = marked.parse(datos.text);
             
-            // Transformamos los enlaces en botones
+            // Filtramos y transformamos los links del texto en botones multimedia estéticos
             const enlaces = resultadoTexto.querySelectorAll('a');
             enlaces.forEach(enlace => {
                 const url = enlace.href.toLowerCase();
-                enlace.target = "_blank"; // Abre en pestaña nueva
+                enlace.target = "_blank"; 
                 
-                if (url.includes('video') || url.includes('bunny') || url.includes('mp4')) {
+                if (url.includes('video') || url.includes('bunny') || url.includes('mp4') || url.includes('mediadelivery.net')) {
                     enlace.innerHTML = "🎥 Ver Video del Procedimiento (Bunny)";
                 } else if (url.includes('pdf') || url.includes('manual') || url.includes('diagrama')) {
                     enlace.innerHTML = "📂 Descargar Manual / Diagrama PDF";
