@@ -3,17 +3,19 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// EL PUENTE AL NUEVO ARCHIVO: Importamos los tips exclusivos
-import { tipsContenido } from './tips.js';
-
 const app = express();
 
+// Configuramos las rutas internas para que Express encuentre el index.html
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Permitir que el servidor entienda datos en formato JSON
 app.use(express.json());
+
+// EL PUENTE NUEVO: Le dice a Express que sirva el index.html y los archivos de la raíz
 app.use(express.static(__dirname));
 
+// Bypass de CORS para evitar bloqueos del navegador
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,10 +28,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// Ruta principal: Ahora en lugar de solo texto, envía su pantalla index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'buscador.html'));
 });
 
+// Ruta POST para procesar el diagnóstico con Gemini
 app.post('/api/diagnostico', async (req, res) => {
     try {
         const { marca, modelo, sintoma, descartes } = req.body;
@@ -38,11 +42,12 @@ app.post('/api/diagnostico', async (req, res) => {
             return res.status(200).json({ text: "⚠️ ERROR EN RECEPCIÓN: Faltan datos técnicos en el reporte enviado desde el buscador." });
         }
 
-        // El prompt ahora se alimenta automáticamente del archivo tips.js
+        const tipsContenido = "Aplica el Método OC. Usa conocimientos avanzados en electrónica de TVs modernos. Analiza voltajes en la fuente, señales LVDS/Mini-LVDS, voltajes de compuerta T-CON (VGH, VGL, VCOM) y fallas comunes en COF/TAB.";
+
         const prompt = `Actúa como un expertisimo instructor de reparación de televisores modernos. 
-        Basándote en estas directrices técnicas del Método OC y base de conocimientos: ${tipsContenido}
-        Analiza detalladamente la siguiente falla en banco y provee un diagnóstico estructurado bajo el Método OC:
-        MARCA: ${marca} | MODELO: ${modelo} | SÍNTOMA: ${sintoma} | PRUEBAS REALIZADAS: ${descartes || 'Ninguna registrada'}`;
+        Basándote en estas directrices técnicas: ${tipsContenido}
+        Analiza detalladamente la siguiente falla en banco y provee un diagnóstico estruturado bajo el Método OC:
+        MARCA: ${marca} | MODELO: ${modelo} | SÍNTOMA: ${sintoma} | PRUEBAS REALIZADAS: ${descartes || 'Ninguna registrado'}`;
 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
