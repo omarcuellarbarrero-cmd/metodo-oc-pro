@@ -6,142 +6,71 @@
     <title>Método OC: Diagnóstico Universal</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root {
-            --primary-color: #f97316;
-            --primary-hover: #ea580c;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --accent-video: #ef4444;
-            --accent-pdf: #10b981;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; }
-        .navbar { background-color: #0f172a; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .navbar-brand { color: #f97316; font-weight: bold; font-size: 1.3rem; text-decoration: none; }
-        .container { max-width: 800px; margin: 40px auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        h1 { text-align: center; color: #0f172a; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; }
-        input, textarea, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        button.btn-search { width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        button.btn-search:hover { background-color: var(--primary-hover); }
-        .resultado-box { margin-top: 30px; padding: 25px; border-left: 6px solid var(--primary-color); background-color: #f8fafc; display: none; }
-    /* Animación de carga para el botón */
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.98); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.btn-loading {
-    animation: pulse 1.5s infinite;
-    background-color: #f97316 !important;
-    cursor: wait !important;
-}
+        :root { --primary-color: #f97316; --primary-hover: #ea580c; --bg-color: #f1f5f9; --card-bg: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: #1e293b; margin: 0; padding: 20px; }
+        .navbar { background-color: #0f172a; padding: 15px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; }
+        .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .btn-search { width: 100%; padding: 15px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-loading { background-color: #ea580c; cursor: wait; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .resultado-box { margin-top: 20px; padding: 20px; border-left: 5px solid var(--primary-color); background: #f8fafc; display: none; }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <a class="navbar-brand" href="#">Método OC: <span>Diagnóstico Universal</span></a>
-</nav>
+<nav class="navbar"><h3>Método OC: Diagnóstico Universal</h3></nav>
 
 <div class="container">
-    <h1>Método OC: Diagnóstico Universal</h1>
-    
     <div class="form-group">
-        <label for="tipoEquipo">Tipo de Equipo:</label>
+        <label>Tipo de Equipo:</label>
         <select id="tipoEquipo">
-            <option value="TV LCD/LED">TV LCD/LED (Tecnología Moderna)</option>
-            <option value="TV TRC">TV TRC (Tecnología Clásica)</option>
-            <option value="Audio">Equipos de Audio / Sonido</option>
-            <option value="Otro">Otro / Industrial</option>
+            <option value="TV LCD/LED">TV LCD/LED (Moderna)</option>
+            <option value="TV TRC">TV TRC (Clásica)</option>
+            <option value="Audio">Audio / Sonido</option>
+            <option value="Otro">Otro</option>
         </select>
     </div>
+    <div class="form-group"><label>Marca:</label><input type="text" id="marca"></div>
+    <div class="form-group"><label>Modelo:</label><input type="text" id="modelo"></div>
+    <div class="form-group"><label>Síntoma:</label><textarea id="sintoma" rows="3"></textarea></div>
+    
+    <button class="btn-search" id="btnConsultar" onclick="lanzarDiagnostico()">Consultar Motor de IA</button>
 
-    <div class="form-group">
-        <label for="marca">Marca del Equipo:</label>
-        <input type="text" id="marca" placeholder="Ej: Sony, Samsung...">
-    </div>
-
-    <div class="form-group">
-        <label for="modelo">Modelo exacto:</label>
-        <input type="text" id="modelo" placeholder="Ej: KDL-32M3000...">
-    </div>
-
-    <div class="form-group">
-        <label for="sintoma">Síntoma observado:</label>
-        <textarea id="sintoma" rows="3"></textarea>
-    </div>
-
-    <button class="btn-search" onclick="lanzarDiagnostico()">Consultar Motor de IA</button>
-
-    <div id="resultadoBox" class="resultado-box">
-        <div id="resultadoTexto"></div>
-    </div>
+    <div id="resultadoBox" class="resultado-box"><div id="resultadoTexto"></div></div>
 </div>
 
 <script>
     async function lanzarDiagnostico() {
-    // Captura exacta del valor del selector
-    const selectElement = document.getElementById('tipoEquipo');
-    const tipoEquipo = selectElement.options[selectElement.selectedIndex].text; 
-    
-    // Captura de los inputs (asegurándonos de obtener el .value)
-    const marca = document.getElementById('marca').value;
-    const modelo = document.getElementById('modelo').value;
-    const sintoma = document.getElementById('sintoma').value;
+        const btn = document.getElementById('btnConsultar');
+        const tipoEquipo = document.getElementById('tipoEquipo').options[document.getElementById('tipoEquipo').selectedIndex].text;
+        const marca = document.getElementById('marca').value;
+        const modelo = document.getElementById('modelo').value;
+        const sintoma = document.getElementById('sintoma').value;
 
-    console.log("Enviando:", { tipoEquipo, marca, modelo, sintoma });
+        btn.classList.add('btn-loading');
+        btn.innerText = "⚡ Sintonizando Frecuencia...";
+        btn.disabled = true;
 
-    const btn = document.querySelector('.btn-search');
-    btn.classList.add('btn-loading');
-    btn.innerText = "⚡ Sintonizando Frecuencia...";
-    btn.disabled = true;
-
-    try {
-        const respuesta = await fetch('/api/diagnostico', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma })
-        });
-
-        const datos = await respuesta.json();
-        
-        document.getElementById('resultadoTexto').innerHTML = marked.parse(datos.text);
-        document.getElementById('resultadoBox').style.display = 'block';
-    } catch (error) {
-        alert("Error de conexión con el motor de IA");
-    } finally {
-        btn.classList.remove('btn-loading');
-        btn.innerText = "Consultar Motor de IA";
-        btn.disabled = false;
+        try {
+            const res = await fetch('/api/diagnostico', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma })
+            });
+            const data = await res.json();
+            document.getElementById('resultadoTexto').innerHTML = marked.parse(data.text);
+            document.getElementById('resultadoBox').style.display = 'block';
+        } catch (e) {
+            alert("Error: " + e.message);
+        } finally {
+            btn.classList.remove('btn-loading');
+            btn.innerText = "Consultar Motor de IA";
+            btn.disabled = false;
+        }
     }
-}
-
-    // ... (el resto de su código de fetch, marca, modelo, etc.) ...
-
-    try {
-const respuesta = await fetch('/api/diagnostico', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma }) // Asegúrese de que estén todas
-});
-        
-        // Al terminar, devolvemos el botón a su estado normal
-        btn.classList.remove('btn-loading');
-        btn.innerText = "Consultar Motor de IA";
-        btn.disabled = false;
-        
-        document.getElementById('resultadoTexto').innerHTML = marked.parse(datos.text);
-        document.getElementById('resultadoBox').style.display = 'block';
-    } catch (error) {
-        btn.classList.remove('btn-loading');
-        btn.innerText = "Consultar Motor de IA";
-        btn.disabled = false;
-        alert("Error de conexión");
-    }
-}
 </script>
 </body>
 </html>
