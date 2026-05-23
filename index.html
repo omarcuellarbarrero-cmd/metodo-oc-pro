@@ -93,8 +93,11 @@
     // ... (el resto de su código de fetch, marca, modelo, etc.) ...
 
     try {
-        const respuesta = await fetch('/api/diagnostico', { /* ... */ });
-        const datos = await respuesta.json();
+const respuesta = await fetch('/api/diagnostico', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma }) // Asegúrese de que estén todas
+});
         
         // Al terminar, devolvemos el botón a su estado normal
         btn.classList.remove('btn-loading');
