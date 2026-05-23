@@ -13,12 +13,15 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 app.post('/api/diagnostico', async (req, res) => {
+    console.log("Datos recibidos del formulario:", req.body); // <-- OJO AQUÍ
     try {
         const { tipoEquipo, marca, modelo, sintoma } = req.body;
 
-        if (!marca || !modelo || !sintoma) {
+        if (!tipoEquipo || !marca || !modelo || !sintoma) {
+            console.error("Faltan campos, datos recibidos:", req.body); // <-- OJO AQUÍ
             return res.status(200).json({ text: "⚠️ ERROR: Faltan datos obligatorios." });
         }
+        // ... (resto del código)
 
         // Búsqueda en su base local
         const marcaKey = marca.toLowerCase().trim();
