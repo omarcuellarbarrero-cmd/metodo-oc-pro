@@ -26,6 +26,18 @@
         button.btn-search { width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         button.btn-search:hover { background-color: var(--primary-hover); }
         .resultado-box { margin-top: 30px; padding: 25px; border-left: 6px solid var(--primary-color); background-color: #f8fafc; display: none; }
+    /* Animación de carga para el botón */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.98); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.btn-loading {
+    animation: pulse 1.5s infinite;
+    background-color: #f97316 !important;
+    cursor: wait !important;
+}
     </style>
 </head>
 <body>
@@ -71,25 +83,33 @@
 
 <script>
     async function lanzarDiagnostico() {
-        const tipoEquipo = document.getElementById('tipoEquipo').value;
-        const marca = document.getElementById('marca').value;
-        const modelo = document.getElementById('modelo').value;
-        const sintoma = document.getElementById('sintoma').value;
+    const btn = document.querySelector('.btn-search');
+    
+    // Cambiamos el texto y activamos la animación
+    btn.classList.add('btn-loading');
+    btn.innerText = "⚡ Sintonizando Frecuencia...";
+    btn.disabled = true;
 
-        const btn = document.querySelector('.btn-search');
-        btn.disabled = true;
+    // ... (el resto de su código de fetch, marca, modelo, etc.) ...
 
-        const respuesta = await fetch('/api/diagnostico', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tipoEquipo, marca, modelo, sintoma })
-        });
-
+    try {
+        const respuesta = await fetch('/api/diagnostico', { /* ... */ });
         const datos = await respuesta.json();
+        
+        // Al terminar, devolvemos el botón a su estado normal
+        btn.classList.remove('btn-loading');
+        btn.innerText = "Consultar Motor de IA";
+        btn.disabled = false;
+        
         document.getElementById('resultadoTexto').innerHTML = marked.parse(datos.text);
         document.getElementById('resultadoBox').style.display = 'block';
+    } catch (error) {
+        btn.classList.remove('btn-loading');
+        btn.innerText = "Consultar Motor de IA";
         btn.disabled = false;
+        alert("Error de conexión");
     }
+}
 </script>
 </body>
 </html>
