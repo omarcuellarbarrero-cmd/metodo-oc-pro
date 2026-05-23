@@ -24,13 +24,21 @@ app.post('/api/diagnostico', async (req, res) => {
         // ... (resto del código)
 
         // Búsqueda en su base local
-        const marcaKey = marca.toLowerCase().trim();
-        const modeloKey = modelo.toLowerCase().trim();
-        let tipLocal = "No hay notas previas en tips.js para este modelo.";
-        
-        if (tipsData[marcaKey] && tipsData[marcaKey][modeloKey]) {
-            tipLocal = tipsData[marcaKey][modeloKey];
-        }
+// ... dentro de la ruta app.post('/api/diagnostico', ...)
+const marcaKey = marca.toLowerCase().trim();
+const modeloKey = modelo.toLowerCase().trim();
+
+// Buscamos directamente en el objeto estructurado
+let tipLocal = "No hay notas previas para este modelo.";
+if (tipsData[marcaKey] && tipsData[marcaKey][modeloKey]) {
+    const data = tipsData[marcaKey][modeloKey];
+    // Construimos una respuesta estructurada con la información técnica
+    tipLocal = `
+    - Síntoma reportado: ${data.sintoma}
+    - Solución técnica recomendada: ${data.solucion}
+    ${data.recursos ? '- Recursos/Video: ' + data.recursos : ''}
+    `;
+}
 
         // PROMPT REFINADO PARA DIAGNÓSTICO UNIVERSAL
         const prompt = `Eres un Instructor Técnico Senior experto en el Método OC.
