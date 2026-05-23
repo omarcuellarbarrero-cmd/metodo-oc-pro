@@ -1,10 +1,19 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
+// Configuración para manejar rutas de archivos en módulos ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Permitir que el servidor entienda datos en formato JSON
 app.use(express.json());
+
+// Servir los archivos estáticos (HTML, CSS) de la carpeta raíz automáticamente
+app.use(express.static(__dirname));
 
 // Bypass de CORS para que su interfaz estática se comunique sin bloqueos
 app.use((req, res, next) => {
@@ -19,16 +28,12 @@ app.use((req, res, next) => {
     next();
 });
 
-<<<<<<< HEAD
-// Ruta principal: Ahora en lugar de solo texto, envía su pantalla index.html
+// Ruta principal: Carga la pantalla principal de ayer sin problemas
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Ruta POST para procesar el diagnóstico con Gemini
-=======
-// Cambiamos el handler de Vercel por una ruta POST estándar de Express
->>>>>>> parent of 4ec97aa (Update index.js)
 app.post('/api/diagnostico', async (req, res) => {
     try {
         const { marca, modelo, sintoma, descartes } = req.body;
@@ -73,10 +78,7 @@ app.post('/api/diagnostico', async (req, res) => {
         });
     }
 });
-// Ruta de prueba de vida (Healthcheck) para que Coolify vea que el circuito está cerrado
-app.get('/', (req, res) => {
-    res.status(200).send("Servidor PRO operando en perfecta condición.");
-});
+
 // EL FILAMENTO CONTINUO: Este bloque mantiene el servidor encendido las 24/7
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
