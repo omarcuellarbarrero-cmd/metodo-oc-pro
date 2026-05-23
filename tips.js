@@ -25,5 +25,3 @@ export const tipsData = {
         "tp.ms338.pb801": { sintoma: "Pegado en logo Android", solucion: "Reinstalar software o cambio de memoria eMMC." }
     }
 };
-// Asegúrese de que al final de su archivo tips.js diga esto:
-export { tipsContenido };
