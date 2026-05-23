@@ -3,312 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador Avanzado PRO - Método OC</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
+    <title>Estación de Diagnóstico - Método OC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #f97316; /* ¡NARANJA MÉTODO OC! */
-            --primary-hover: #ea580c; /* Naranja dinámico al pasar el mouse */
-            --bg-color: #f1f5f9;      /* Fondo gris claro de banco */
-            --card-bg: #ffffff;       /* Chasis Blanco Limpio */
-            --text-color: #1e293b;    /* Texto oscuro de alta legibilidad */
-            --accent-video: #ef4444;  /* Rojo Vivo para transmisión de Video (Bunny) */
-            --accent-pdf: #10b981;    /* Verde Industrial para Manuales y PDF */
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
-
-        /* BARRA SUPERIOR DE NAVEGACIÓN COMPLETA */
-        .navbar {
-            background-color: #0f172a;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            color: var(--primary-color);
-            font-weight: bold;
-            font-size: 1.3rem;
-            text-decoration: none;
-        }
-
-        .navbar-nav a {
-            color: #94a3b8;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .navbar-nav a:hover {
-            color: #ffffff;
-        }
-
-        .navbar-nav a.btn-logout {
-            color: #f87171;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; padding: 20px; user-select: none; -webkit-user-select: none; }
+        .container { max-width: 650px; margin: auto; background: #2a2a2a; padding: 25px; border-radius: 15px; border: 1px solid #ff9800; box-shadow: 0 0 20px rgba(255,152,0,0.1); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 15px; }
+        .nav-links { display: flex; gap: 15px; }
+        .btn-nav { color: #ff9800; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; background: none; border: none; font-size: 1em; padding: 0; }
+        .btn-nav:hover { color: #e68a00; }
+        .logo-small { max-width: 90px; height: auto; }
+        h2 { text-align: center; color: #ff9800; text-transform: uppercase; margin-top: 5px; }
+        label { display: block; margin-top: 15px; color: #bbb; font-weight: bold; font-size: 0.9em; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; font-size: 1em; }
+        textarea { height: 90px; resize: none; }
+        button.btn-principal { width: 100%; padding: 16px; margin-top: 25px; background: #ff9800; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 1.1em; }
+        button.btn-principal:hover { background: #e68a00; }
+        #loading { display: none; text-align: center; margin-top: 25px; color: #ff9800; }
+        #result { display: none; margin-top: 25px; padding: 25px; background: #333; border-left: 6px solid #ff9800; border-radius: 8px; line-height: 1.7; white-space: pre-wrap; color: #f0f0f0; }
         
-        .navbar-nav a.btn-logout:hover {
-            color: #f87171;
-            text-decoration: underline;
-        }
-
-        /* CONTENEDOR PRINCIPAL */
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        h1 {
-            text-align: center;
-            color: #0f172a;
-            margin-bottom: 5px;
-        }
-
-        h3 {
-            text-align: center;
-            color: #64748b;
-            margin-top: 0;
-            font-weight: 400;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #334155;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        /* BOTÓN NARANJA DE CONSULTA */
-        button.btn-search {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2);
-        }
-
-        button.btn-search:hover {
-            background-color: var(--primary-hover);
-        }
-
-        button.btn-search:active {
-            transform: scale(0.99);
-        }
-
-        button.btn-search:disabled {
-            background-color: #cbd5e1;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-
-        /* CAJA DE RESULTADOS */
-        .resultado-box {
-            margin-top: 30px;
-            padding: 25px;
-            border-left: 6px solid var(--primary-color);
-            background-color: #f8fafc;
-            border-radius: 6px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-            display: none;
-        }
-
-        /* BOTONES MULTIMEDIA INTERACTIVOS (ROJO Y VERDE) */
-        .resultado-box a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
-            margin: 10px 12px 10px 0;
-            font-weight: bold;
-            text-decoration: none;
-            color: white !important;
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .resultado-box a:hover {
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
-
-        /* Filtros por coincidencia de texto en la URL */
-        .resultado-box a[href*="video"], 
-        .resultado-box a[href*="bunny"], 
-        .resultado-box a[href*="mp4"],
-        .resultado-box a[href*="player.mediadelivery.net"] {
-            background-color: var(--accent-video);
-        }
-
-        .resultado-box a[href*="pdf"], 
-        .resultado-box a[href*="manual"], 
-        .resultado-box a[href*="diagrama"] {
-            background-color: var(--accent-pdf);
-        }
-
-        /* Color por defecto si es otro tipo de link */
-        .resultado-box a:not([href*="video"]):not([href*="bunny"]):not([href*="mp4"]):not([href*="player.mediadelivery.net"]):not([href*="pdf"]):not([href*="manual"]):not([href*="diagrama"]) {
-            background-color: #64748b;
-        }
-
-        .loading {
-            text-align: center;
-            display: none;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-top: 20px;
-            font-size: 1.1rem;
-        }
+        /* Contenedor de Botones Multimedia */
+        .soporte-container { margin-top: 25px; border-top: 2px solid #444; padding-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .btn-recurso { display: inline-flex; align-items: center; gap: 10px; color: white !important; padding: 14px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .btn-video { background: #d32f2f; } /* Rojo */
+        .btn-imagen { background: #2e7d32; } /* Verde */
+        .btn-manual { background: #1976d2; } /* Azul */
+        .btn-recurso:hover { transform: translateY(-3px); filter: brightness(1.2); }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <a class="navbar-brand" href="#">Método OC PRO</a>
-    <div class="navbar-nav">
-        <a href="/">Inicio</a>
-        <a href="#">Herramientas</a>
-        <a href="#" class="btn-logout">Cerrar Sesión</a>
-    </div>
-</nav>
-
 <div class="container">
-    <h1>Buscador Avanzado PRO</h1>
-    <h3>Ecosistema de Diagnóstico Especializado - Omar Cuéllar</h3>
-    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 25px;">
-
-    <div class="form-group">
-        <label for="marca">Marca del TV:</label>
-        <input type="text" id="marca" placeholder="Ej: Samsung, LG, Sony...">
+    <div class="header-nav">
+        <div class="nav-links">
+            <a href="index.html" class="btn-nav"><i class="fa-solid fa-house"></i> Inicio</a>
+            <button onclick="cerrarSesion()" class="btn-nav"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+        </div>
+        <img src="logo-oc.png" alt="Método OC" class="logo-small">
     </div>
+    <h2>Estación de Diagnóstico</h2>
+    <label><i class="fa-solid fa-tag"></i> Marca</label>
+    <input type="text" id="marca" placeholder="Ej: Sony...">
+    <label><i class="fa-solid fa-microchip"></i> Modelo</label>
+    <input type="text" id="modelo" placeholder="Ej: KDL-32M3000...">
+    <label><i class="fa-solid fa-tv"></i> Síntoma de la Falla</label>
+    <input type="text" id="sintoma" placeholder="Ej: Imagen lenta...">
+    <label><i class="fa-solid fa-screwdriver-wrench"></i> Descartes realizados</label>
+    <textarea id="descartes" placeholder="Voltajes medidos..."></textarea>
+    
+    <button onclick="consultarIA()" class="btn-principal">
+        <i class="fa-solid fa-magnifying-glass"></i> SOLICITAR DIAGNÓSTICO
+    </button>
 
-    <div class="form-group">
-        <label for="modelo">Modelo exacto:</label>
-        <input type="text" id="modelo" placeholder="Ej: UN49MU6100...">
-    </div>
-
-    <div class="form-group">
-        <label for="sintoma">Síntoma observado en banco:</label>
-        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea el LED de stand-by..."></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="descartes">Pruebas o descartes realizados (Opcional):</label>
-        <textarea id="descartes" rows="2" placeholder="Ej: Voltajes correctos en fuente, subfuentes de la Main estables..."></textarea>
-    </div>
-
-    <button class="btn-search" onclick="lanzarDiagnostico()">Consultar Motor de IA</button>
-
-    <div id="loading" class="loading">⚡ Analizando fallas en banco y parámetros del Método OC... Espere.</div>
-
-    <div id="resultadoBox" class="resultado-box">
-        <h4 style="margin-top:0; color:#0f172a; font-size:1.2rem;">📋 Diagnóstico Estructurado:</h4>
-        <div id="resultadoTexto"></div>
-    </div>
+    <div id="loading"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Sincronizando con la base de datos...</div>
+    <div id="result"></div>
 </div>
 
 <script>
-    async function lanzarDiagnostico() {
-        const marca = document.getElementById('marca').value;
-        const modelo = document.getElementById('modelo').value;
-        const sintoma = document.getElementById('sintoma').value;
-        const descartes = document.getElementById('descartes').value;
+    // BLOQUEOS DE SEGURIDAD
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'c' || e.key === 'i'))) e.preventDefault();
+    });
 
-        if (!marca || !modelo || !sintoma) {
-            alert('Por favor, complete los campos obligatorios: Marca, Modelo y Síntoma.');
-            return;
+    function cerrarSesion() {
+        if(confirm("¿Desea cerrar su sesión de alumno, Maestro?")) {
+            localStorage.removeItem('oc_email');
+            location.reload();
+        }
+    }
+
+    async function consultarIA() {
+        let emailAlumno = localStorage.getItem('oc_email');
+        if (!emailAlumno) {
+            emailAlumno = prompt("Ingrese el correo de su compra:");
+            if (emailAlumno) localStorage.setItem('oc_email', emailAlumno.trim().toLowerCase());
+            else return;
         }
 
-        const btn = document.querySelector('.btn-search');
+        const marca = document.getElementById('marca').value.trim();
+        const modelo = document.getElementById('modelo').value.trim();
+        const sintoma = document.getElementById('sintoma').value.trim();
+        const descartes = document.getElementById('descartes').value.trim();
+        const resultDiv = document.getElementById('result');
         const loading = document.getElementById('loading');
-        const resultadoBox = document.getElementById('resultadoBox');
-        const resultadoTexto = document.getElementById('resultadoTexto');
 
-        btn.disabled = true;
+        // BANCO DE DATOS MAESTRO
+        const BANCO_LINKS = {
+            "VIDEO_SONY_32M3000": "https://player.mediadelivery.net/play/651071/4dddd57a-e922-4a3c-a433-54349eca2d34",
+            "IMG_SONY_COF_JUMPER": "https://drive.google.com/file/d/1jcb_yrxNxnS7PcX5DN5x0jIujalz15zK/view?usp=sharing",
+            "PDF_SONY_KDL32_M3000": "https://drive.google.com/file/d/1hZbOwZHIsgFxahivRZm9Gzq1qSGC5136/view?usp=sharing"
+        };
+
+        if (!marca || !modelo || !sintoma || !descartes) return alert("Complete los campos.");
+
+        resultDiv.style.display = 'none';
         loading.style.display = 'block';
-        resultadoBox.style.display = 'none';
 
         try {
-            const respuesta = await fetch('/api/diagnostico', {
+            const res = await fetch('/api/diagnostico', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ marca, modelo, sintoma, descartes })
+                body: JSON.stringify({ marca, modelo, sintoma, descartes, email: emailAlumno })
             });
+            
+            const data = await res.json();
+            let textoIA = data.text;
+            
+            let htmlBotones = '<div class="soporte-container">';
+            let hayRecurso = false;
 
-            const datos = await respuesta.json();
-            
-            // Convertimos Markdown de la IA a HTML estructurado
-            resultadoTexto.innerHTML = marked.parse(datos.text);
-            
-            // Filtramos y transformamos los links del texto en botones multimedia estéticos
-            const enlaces = resultadoTexto.querySelectorAll('a');
-            enlaces.forEach(enlace => {
-                const url = enlace.href.toLowerCase();
-                enlace.target = "_blank"; 
-                
-                if (url.includes('video') || url.includes('bunny') || url.includes('mp4') || url.includes('mediadelivery.net')) {
-                    enlace.innerHTML = "🎥 Ver Video del Procedimiento (Bunny)";
-                } else if (url.includes('pdf') || url.includes('manual') || url.includes('diagrama')) {
-                    enlace.innerHTML = "📂 Descargar Manual / Diagrama PDF";
-                } else {
-                    enlace.innerHTML = "🔗 Enlace Complementario";
+            // ESCANEO DE ALTA SENSIBILIDAD
+            for (const codigo in BANCO_LINKS) {
+                // Buscamos el código ignorando mayúsculas/minúsculas
+                if (textoIA.toUpperCase().indexOf(codigo.toUpperCase()) !== -1) {
+                    hayRecurso = true;
+                    
+                    let claseCss = "btn-video"; // Por defecto Rojo
+                    let icono = "fa-play-circle";
+                    let textoBoton = "VER VIDEO";
+
+                    if (codigo.startsWith("IMG_")) {
+                        claseCss = "btn-imagen"; // Verde
+                        icono = "fa-image";
+                        textoBoton = "VER IMAGEN";
+                    } else if (codigo.startsWith("PDF_")) {
+                        claseCss = "btn-manual"; // Azul
+                        icono = "fa-file-pdf";
+                        textoBoton = "DESCARGAR PDF";
+                    }
+
+                    htmlBotones += `<a href="${BANCO_LINKS[codigo]}" target="_blank" class="btn-recurso ${claseCss}"><i class="fa-solid ${icono}"></i> ${textoBoton}</a>`;
+                    
+                    // Limpiamos el código del texto final para que no se vea feo
+                    const regex = new RegExp(codigo, 'gi');
+                    textoIA = textoIA.replace(regex, "");
                 }
-            });
+            }
 
-            resultadoBox.style.display = 'block';
+            // LIMPIEZA DE BASURA VISUAL
+            textoIA = textoIA.replace(/(RECURSO:|VIDEO:|IMAGEN:|PDF:|MANUAL:|LINK:|CÓDIGO:)/gi, "");
+
+            resultDiv.innerHTML = textoIA.trim() + (hayRecurso ? htmlBotones + '</div>' : '');
+            loading.style.display = 'none';
+            resultDiv.style.display = 'block';
 
         } catch (error) {
-            resultadoTexto.innerHTML = `<p style="color:red;">❌ Error de conexión con el VPS: ${error.message}</p>`;
-            resultadoBox.style.display = 'block';
-        } finally {
-            btn.disabled = false;
             loading.style.display = 'none';
+            alert("Error de conexión.");
         }
     }
 </script>
-
 </body>
 </html>
