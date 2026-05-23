@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Diagnósticos PRO - Método OC</title>
+    <title>Buscador Avanzado PRO - Método OC</title>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
@@ -13,8 +13,8 @@
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-color: #1e293b;
-            --accent-video: #ef4444; /* Rojo para botones de Video/Bunny */
-            --accent-pdf: #10b981;   /* Verde para botones de Manuales/PDF */
+            --accent-video: #ef4444; /* Rojo Bunny */
+            --accent-pdf: #10b981;   /* Verde Diagramas */
         }
 
         body {
@@ -113,21 +113,18 @@
             opacity: 0.9;
         }
 
-        /* Filtro de color para los botones */
+        /* Si el enlace es de Bunny/Video, se vuelve ROJO */
         .resultado-box a[href*="video"], 
         .resultado-box a[href*="bunny"], 
         .resultado-box a[href*="mp4"] {
             background-color: var(--accent-video);
         }
 
+        /* Si el enlace es de PDF/Manual, se vuelve VERDE */
         .resultado-box a[href*="pdf"], 
         .resultado-box a[href*="manual"], 
         .resultado-box a[href*="diagrama"] {
             background-color: var(--accent-pdf);
-        }
-
-        .resultado-box a:not([href*="video"]):not([href*="bunny"]):not([href*="mp4"]):not([href*="pdf"]):not([href*="manual"]):not([href*="diagrama"]) {
-            background-color: var(--primary-color);
         }
 
         .loading {
@@ -158,7 +155,7 @@
 
     <div class="form-group">
         <label for="sintoma">Síntoma observado en banco:</label>
-        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea..."></textarea>
+        <textarea id="sintoma" rows="3" placeholder="Ej: Reinicia en bucle, parpadea el LED 6 veces..."></textarea>
     </div>
 
     <div class="form-group">
@@ -206,12 +203,14 @@
 
             const datos = await respuesta.json();
             
+            // Renderizamos el texto usando Marked.js
             resultadoTexto.innerHTML = marked.parse(datos.text);
             
+            // Transformamos los enlaces en botones
             const enlaces = resultadoTexto.querySelectorAll('a');
             enlaces.forEach(enlace => {
                 const url = enlace.href.toLowerCase();
-                enlace.target = "_blank"; 
+                enlace.target = "_blank"; // Abre en pestaña nueva
                 
                 if (url.includes('video') || url.includes('bunny') || url.includes('mp4')) {
                     enlace.innerHTML = "🎥 Ver Video del Procedimiento (Bunny)";
