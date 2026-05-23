@@ -292,7 +292,5 @@ SOLUCION: Jumper desde T-CON a COF.
 [VIDEO]: [VIDEO]: https://player.mediadelivery.net/play/651071/4dddd57a-e922-4a3c-a433-54349eca2d34?video=true
 [PDF]: https://www.mediafire.com/file/4g23cvomzdh62he/KDL-32M3000+Chasis+MA1.pdf/file
 =================================
-
- 
-
 `;
+export { tipsData };
