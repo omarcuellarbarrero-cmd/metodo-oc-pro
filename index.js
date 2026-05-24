@@ -22,7 +22,7 @@ app.post('/api/diagnostico', async (req, res) => {
         Instrucción: Proporciona un diagnóstico técnico lógico y preciso paso a paso.`;
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const modelAI = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const modelAI = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         
         const result = await modelAI.generateContent(prompt);
         res.json({ text: result.response.text() });
