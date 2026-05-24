@@ -1,13 +1,10 @@
 {
-  "name": "lcd-search-pro",
+  "name": "metodo-oc",
   "version": "1.0.0",
-  "type": "module",
+  "type": "module", 
   "main": "index.js",
   "dependencies": {
-    "@google/generative-ai": "^0.11.0",
-    "express": "^4.19.2"
-  },
-  "engines": {
-    "node": "20.x"
+    "express": "^4.18.2",
+    "@google/generative-ai": "^0.1.0"
   }
 }
