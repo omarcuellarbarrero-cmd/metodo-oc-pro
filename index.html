@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Test OC</title>
+    <meta charset="UTF-8">
+    <title>Método OC | Portal de Diagnóstico</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background: #ff6600; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        h1 { color: #2c3e50; }
+    </style>
+    <script>
+    if(!localStorage.getItem('usuarioOC')) {
+        window.location.href = 'index.html';
+    }
+</script>
 </head>
 <body>
-    <h1>¡Sistema Funcionando!</h1>
+    <div class="card">
+        <h1>Método OC</h1>
+        <p>Portal Profesional de Diagnóstico Técnico</p>
+        <input type="text" id="nombreColega" placeholder="Ingrese su nombre o taller">
+        <button onclick="identificar()">INGRESAR AL SISTEMA</button>
+    </div>
+
     <script>
-        console.log("El script se está ejecutando...");
-        alert("Hola Maestro, el servidor responde.");
+        function identificar() {
+            const nombre = document.getElementById('nombreColega').value;
+            if(nombre) {
+                localStorage.setItem('usuarioOC', nombre);
+                window.location.href = 'app.html';
+            } else {
+                alert("Por favor, ingrese su identificación.");
+            }
+        }
     </script>
 </body>
 </html>
