@@ -31,5 +31,5 @@ app.post('/api/diagnostico', async (req, res) => {
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-const PORT = 3000;
-app.listen(PORT, () => console.log("Método OC Activo en puerto " + PORT));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => console.log("Método OC Activo en puerto " + PORT));
