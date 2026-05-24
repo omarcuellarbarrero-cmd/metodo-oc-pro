@@ -42,5 +42,10 @@ app.post('/api/diagnostico', async (req, res) => {
         res.status(500).json({ text: "Error procesando el diagnóstico. Intente nuevamente." });
     }
 });
-
+import fs from 'fs';
+app.get('/debug', (req, res) => {
+    fs.readdir('.', (err, files) => {
+        res.json(files);
+    });
+});
 app.listen(process.env.PORT || 3000, '0.0.0.0');
