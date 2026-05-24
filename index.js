@@ -20,10 +20,15 @@ app.post('/api/diagnostico', async (req, res) => {
         console.log("Respuesta recibida de Gemini");
         
         res.json({ text: result.response.text() });
-    } catch (error) {
-        console.error("ERROR CRÍTICO:", error); // ¡Esta línea es vital!
+// En el bloque 'catch' de su index.js, agregue esto:
+} catch (error) {
+    if (error.status === 429) {
+        res.status(429).json({ text: "Maestro, el sistema está saturado. Por favor, espere 15 segundos y vuelva a intentar." });
+    } else {
+        console.error("ERROR CRÍTICO:", error);
         res.status(500).json({ text: "Error en servidor: " + error.message });
     }
+}
 });
 
 app.listen(process.env.PORT || 3000, '0.0.0.0');

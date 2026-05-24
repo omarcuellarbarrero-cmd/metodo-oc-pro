@@ -53,6 +53,14 @@
     
     <button onclick="consultarIA()" class="btn-principal">
         <i class="fa-solid fa-magnifying-glass"></i> SOLICITAR DIAGNÓSTICO
+        // En la función consultarIA() de buscador.html:
+const btn = document.querySelector('button.btn-principal');
+btn.disabled = true; // Bloquea el botón
+btn.innerText = "Procesando...";
+
+// ... (después de recibir la respuesta o el error)
+btn.disabled = false; // Desbloquea el botón
+btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> SOLICITAR DIAGNÓSTICO';
     </button>
 
     <div id="loading"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Sincronizando con la base de datos...</div>
