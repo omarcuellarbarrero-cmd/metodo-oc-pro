@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # EL CAMBIO AQUÍ: Arrancamos el motor apuntando al nuevo archivo de la raíz
-CMD ["node", "index.js"]
+CMD ["node", "cerebro.js"]
