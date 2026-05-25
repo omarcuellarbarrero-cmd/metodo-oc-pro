@@ -1,27 +1,61 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import express from 'express';
-import fs from 'fs';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Método OC | Portal de Diagnóstico</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; 
+            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Fondo profundo */
+            margin: 0; 
+        }
+        .tablet-frame { 
+            background: rgba(255, 255, 255, 0.1); /* Efecto cristal */
+            backdrop-filter: blur(15px); /* Desenfoque flotante */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px; 
+            border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            text-align: center; 
+            max-width: 350px; 
+            color: white;
+        }
+        .logo { width: 100px; margin-bottom: 20px; }
+        input { 
+            width: 100%; padding: 12px; margin: 15px 0; 
+            border: none; border-radius: 8px; background: rgba(255,255,255,0.9);
+            box-sizing: border-box; text-align: center;
+        }
+        button { 
+            background: #ff6600; color: white; border: none; 
+            padding: 12px 25px; border-radius: 8px; cursor: pointer; 
+            font-weight: bold; width: 100%; transition: 0.3s;
+        }
+        button:hover { background: #e65c00; transform: scale(1.02); }
+        h1 { margin: 0; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div class="tablet-frame">
+        <img src="logo-oc.png" alt="Logo OC" class="logo">
+        <h1>Método OC</h1>
+        <p>Portal Profesional de Diagnóstico</p>
+        <input type="text" id="nombreColega" placeholder="Nombre o Taller">
+        <button onclick="identificar()">INGRESAR</button>
+    </div>
 
-const app = express();
-app.use(express.json());
-app.use(express.static('.'));
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "SU_API_KEY_AQUI");
-
-app.post('/api/diagnostico', async (req, res) => {
-    try {
-        const { marca, modelo, sintoma, descartes, usuario } = req.body;
-        const tips = fs.readFileSync('./tips.js', 'utf8');
-
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const prompt = `Actúa como técnico experto del Método OC. Usa esta info: ${tips}. Caso: ${marca} ${modelo}, falla: ${sintoma}, descartes: ${descartes}. Usuario: ${usuario}. Responde directo al grano.`;
-
-        const result = await model.generateContent(prompt);
-        res.json({ text: result.response.text() });
-    } catch (err) {
-        console.error("ERROR DETALLADO:", err); // Esto aparecerá en los logs de Coolify
-        res.status(500).json({ text: "Error en el servidor: " + err.message });
-    }
-});
-
-app.listen(process.env.PORT || 3000, '0.0.0.0', () => console.log("🚀 Sistema Método OC activo..."));
+    <script>
+        function identificar() {
+            const nombre = document.getElementById('nombreColega').value;
+            if(nombre) {
+                localStorage.setItem('usuarioOC', nombre);
+                window.location.href = 'app.html';
+            } else {
+                alert("Por favor, ingrese su identificación.");
+            }
+        }
+    </script>
+</body>
+</html>
