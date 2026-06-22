@@ -1,51 +1,46 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const fs = require('fs');
-const path = require('path');
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import fs from "fs";
 
-module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default async function handler(req, res) {
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-
-  try {
-    const { consulta, token } = req.body;
-
-    let fundamentosContenido = "";
-    try {
-      fundamentosContenido = fs.readFileSync(path.join(process.cwd(), 'fundamentos.txt'), 'utf8');
-    } catch (e) {
-      fundamentosContenido = "Explica conceptos de electrónica de forma pedagógica.";
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Método no permitido" });
     }
 
-    const systemPrompt = `
-¡¡Qué tal amigo y colega! Eres el Instructor de "Fundamentos OC".
+    try {
 
-BASE DE CONOCIMIENTOS:
-${fundamentosContenido}
+        const { consulta } = req.body;
 
-REGLAS DE FORMATO:
-1. SALUDO: "¡¡Qué tal amigo y colega!".
-2. RECURSOS: Si el fundamento tiene links en la base de datos, agrégalos al final exactamente así:
-   - VIDEO: [link]
-   - IMAGEN: [link]
-   - MANUAL: [link]
-`;
+        let base = "Explicación técnica OC";
 
-    const API_KEY = "AIzaSyBJWUZ_1XmJ4wVUYiP4258ouapAYVpFcb0"; 
-    const genAI = new GoogleGenerativeAI(API_KEY);
-    const modelIA = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash", 
-      systemInstruction: systemPrompt 
-    });
+        try {
+            base = fs.readFileSync("./fundamentos.txt", "utf8");
+        } catch {}
 
-    const result = await modelIA.generateContent(`Explícame: ${consulta}`);
-    const responseIA = await result.response.text();
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-    return res.status(200).json({ text: responseIA });
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash"
+        });
 
-  } catch (error) {
-    return res.status(200).json({ text: "¡¡Qué tal amigo y colega! Intenta de nuevo." });
-  }
-};
+        const prompt = `
+BASE:
+${base}
+
+CONSULTA:
+${consulta}
+        `;
+
+        const result = await model.generateContent(prompt);
+
+        return res.status(200).json({
+            text: result.response.text()
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            error: "Error en fundamentos"
+        });
+    }
+}

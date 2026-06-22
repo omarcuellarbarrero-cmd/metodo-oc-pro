@@ -1,46 +1,49 @@
-async function registrarEnGoogle(tipo, consulta) {
-    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzbda-nJHLn45ELAwHvLAZvSYb1MMm6f4bXWIstdWNqcrqIUdvZmLLk1etpuQL9uywP/exec"; // <--- PEGA TU URL AQUÍ
-    try {
-        await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            body: JSON.stringify({ tipo, consulta })
-        });
-    } catch (e) { console.error("Error en bitácora externa"); }
-}
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).send('Método no permitido');
 
-    const { image, extraData } = req.body;
-    const API_KEY = "AIzaSyBJWUZ_1XmJ4wVUYiP4258ouapAYVpFcb0".trim(); 
-
-    // Registro en la Caja Negra (Vercel + Google Sheets)
-    console.log(`[LOG VISION] Texto: "${extraData || 'Sin descripción'}"`);
-    await registrarEnGoogle("VISION", extraData || "Escaneo de imagen");
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Método no permitido" });
+    }
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-        const payload = {
-            contents: [{
-                parts: [
-                    { text: "Analiza esta tarjeta electrónica. Identifica etapas y sugiere mediciones según el MÉTODO OC." },
-                    { inlineData: { mimeType: "image/jpeg", data: image } },
-                    { text: `Información adicional del técnico: ${extraData}` }
-                ]
-            }]
-        };
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+        const { image, extraData } = req.body;
+
+        if (!image) {
+            return res.status(400).json({ error: "Imagen requerida" });
+        }
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash"
         });
 
-        const data = await response.json();
-        const resultText = data.candidates[0].content.parts[0].text;
-        return res.status(200).json({ text: resultText });
+        const result = await model.generateContent({
+            contents: [{
+                parts: [
+                    {
+                        text: `Analiza esta tarjeta electrónica bajo el MÉTODO OC. ${extraData || ""}`
+                    },
+                    {
+                        inlineData: {
+                            mimeType: "image/jpeg",
+                            data: image
+                        }
+                    }
+                ]
+            }]
+        });
+
+        return res.status(200).json({
+            text: result.response.text()
+        });
 
     } catch (error) {
-        return res.status(500).json({ error: "Falla en análisis de imagen" });
+
+        return res.status(500).json({
+            error: "Error en análisis de imagen"
+        });
     }
 }
