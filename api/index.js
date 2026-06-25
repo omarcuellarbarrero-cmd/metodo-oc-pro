@@ -23,7 +23,9 @@ app.post('/api/chat', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-
+app.get('/', (req, res) => {
+    res.send('Express funcionando correctamente');
+});
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en puerto ${PORT}`);
 });
