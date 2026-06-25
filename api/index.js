@@ -100,11 +100,19 @@ REGLAS:
         model: 'gemini-2.5-flash'
     });
 
-    const result = await model.generateContent(
-        `${systemPrompt}
-  
-Explícame: ${consulta}`
-);
+const genAI = getGemini();
+
+const model = genAI.getGenerativeModel({
+    model: 'gemini-2.5-flash'
+});
+
+const prompt = systemPrompt + '\n\nExplícame: ' + consulta;
+
+const result = await model.generateContent(prompt);
+
+return res.json({
+    text: result.response.text()
+});
 
     return res.json({
         text: result.response.text()
