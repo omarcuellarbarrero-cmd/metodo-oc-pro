@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Método no permitido');
 
     const { image, extraData } = req.body;
-    const API_KEY = "AIzaSyBJWUZ_1XmJ4wVUYiP4258ouapAYVpFcb0".trim(); 
+    const API_KEY = "AQ.Ab8RN6KwARs0wC8ku7IiLP87hP1G0Jkk3Vs-JlGQkIvdsVViRQ".trim(); 
 
     // Registro en la Caja Negra (Vercel + Google Sheets)
     console.log(`[LOG VISION] Texto: "${extraData || 'Sin descripción'}"`);
