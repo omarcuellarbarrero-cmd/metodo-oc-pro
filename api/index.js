@@ -78,7 +78,7 @@ const { consulta } = req.body;
             join(process.cwd(), 'fundamentos.txt'),
             'utf8'
         );
-    } catch {
+    } catch (e) {
         fundamentosContenido =
             'Explica conceptos de electrónica de forma pedagógica.';
     }
@@ -102,30 +102,31 @@ REGLAS:
     const genAI = getGemini();
 
     const model = genAI.getGenerativeModel({
-        model: 'gemini-2.5-flash',
-        systemInstruction: systemPrompt
+        model: 'gemini-2.5-flash'
     });
 
     const result = await model.generateContent(
-        `Explícame: ${consulta}`
-    );
+        `${systemPrompt}
+   ```
 
+Explícame: ${consulta}`
+);
+
+```
     return res.json({
         text: result.response.text()
     });
-   ```
 
-   } catch (error) {
-   console.error(error);
+} catch (error) {
+    console.error(error);
 
-   ```
     return res.json({
         text: '¡¡Qué tal amigo y colega! Intenta de nuevo.'
     });
-   ```
+}
+```
 
-   }
-   });
+});
 
 /* ==========================
 DIAGNÓSTICO
@@ -184,7 +185,8 @@ HEALTHCHECK
 
 app.get('/health', (req, res) => {
 res.json({
-ok: true
+ok: true,
+status: 'running'
 });
 });
 
