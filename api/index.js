@@ -11,13 +11,12 @@ app.use(express.static('public'));
 function getGemini() {
 const apiKey = process.env.GEMINI_API_KEY;
 
-```
 if (!apiKey) {
     throw new Error('GEMINI_API_KEY no configurada');
 }
 
 return new GoogleGenerativeAI(apiKey);
-```
+
 
 }
 
@@ -29,7 +28,7 @@ app.post('/api/validar-acceso', async (req, res) => {
 try {
 const { token } = req.body;
 
-```
+
     const filePath = join(process.cwd(), 'claves.txt');
 
     if (!existsSync(filePath)) {
@@ -58,7 +57,6 @@ const { token } = req.body;
         valido: false
     });
 }
-```
 
 });
 
@@ -70,7 +68,6 @@ app.post('/api/fundamentos', async (req, res) => {
 try {
 const { consulta } = req.body;
 
-```
     let fundamentosContenido = '';
 
     try {
@@ -84,7 +81,6 @@ const { consulta } = req.body;
     }
 
     const systemPrompt = `
-```
 
 ¡¡Qué tal amigo y colega! Eres el Instructor de Fundamentos OC.
 
@@ -98,7 +94,6 @@ REGLAS:
 3. Si existen recursos en la base de conocimiento, inclúyelos al final.
    `;
 
-   ```
     const genAI = getGemini();
 
     const model = genAI.getGenerativeModel({
@@ -107,12 +102,10 @@ REGLAS:
 
     const result = await model.generateContent(
         `${systemPrompt}
-   ```
-
+  
 Explícame: ${consulta}`
 );
 
-```
     return res.json({
         text: result.response.text()
     });
@@ -124,7 +117,6 @@ Explícame: ${consulta}`
         text: '¡¡Qué tal amigo y colega! Intenta de nuevo.'
     });
 }
-```
 
 });
 
@@ -141,7 +133,6 @@ sintoma,
 descartes
 } = req.body;
 
-```
     const genAI = getGemini();
 
     const model = genAI.getGenerativeModel({
@@ -149,7 +140,7 @@ descartes
     });
 
     const prompt = `
-```
+
 
 Actúa como experto en reparación de televisores.
 
@@ -161,7 +152,7 @@ Descartes realizados: ${descartes || 'Ninguno'}
 Genera un diagnóstico técnico siguiendo el Método OC.
 `;
 
-```
+
     const result = await model.generateContent(prompt);
 
     return res.json({
@@ -175,7 +166,7 @@ Genera un diagnóstico técnico siguiendo el Método OC.
         text: error.message
     });
 }
-```
+
 
 });
 
